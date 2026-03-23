@@ -6,14 +6,39 @@ import (
 
 // Kernel handles syscalls and process management (MVP stub)
 type Kernel struct {
-	current_pid  int
-	stat_factory *misc.StatFactory
+	current_pid          int
+	stat_factory         *misc.StatFactory
+	test_mode            bool // Enable syscall injection for testing
+	test_instruction_cnt int64
 }
 
 // Init initializes the kernel with a stat factory
 func (this *Kernel) Init(stat_factory *misc.StatFactory) {
 	this.current_pid = 0
 	this.stat_factory = stat_factory
+	this.test_mode = false
+	this.test_instruction_cnt = 0
+}
+
+// SetTestMode enables syscall injection for measurement tests
+func (this *Kernel) SetTestMode(enabled bool) {
+	this.test_mode = enabled
+	this.test_instruction_cnt = 0
+}
+
+// InjectTestSyscallIfNeeded checks if we should inject a test syscall
+// (every 1000 instructions in test mode)
+func (this *Kernel) InjectTestSyscallIfNeeded(thread *Thread) {
+	if !this.test_mode {
+		return
+	}
+
+	this.test_instruction_cnt++
+
+	// Inject syscall every 1000 instructions
+	if this.test_instruction_cnt%1000 == 0 {
+		this.SyscallDispatcher(thread)
+	}
 }
 
 // SyscallDispatcher handles syscalls when user code jumps to 0x0000

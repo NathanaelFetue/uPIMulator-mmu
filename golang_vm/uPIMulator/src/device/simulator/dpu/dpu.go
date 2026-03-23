@@ -117,6 +117,10 @@ func (this *Dpu) Init(
 	this.kernel = new(logic.Kernel)
 	this.kernel.Init(this.stat_factory)
 	this.logic.ConnectKernel(this.kernel)
+
+	// Enable MMU test mode if requested (injects syscalls every 1000 instructions)
+	test_mmu := command_line_parser.IntParameter("test_mmu") != 0
+	this.kernel.SetTestMode(test_mmu)
 }
 
 func (this *Dpu) Fini() {

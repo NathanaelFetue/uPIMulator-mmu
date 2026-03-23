@@ -209,6 +209,11 @@ func (this *Logic) ServiceThreadScheduler() {
 			}
 
 			this.stat_factory.Increment("num_instructions", 1)
+
+			// Inject test syscall for MMU measurement if enabled
+			if this.kernel != nil {
+				this.kernel.InjectTestSyscallIfNeeded(thread)
+			}
 		}
 
 		active_tasklets := fmt.Sprintf(

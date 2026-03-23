@@ -142,6 +142,9 @@ func InitCommandLineParser() *misc.CommandLineParser {
 	command_line_parser.AddOption(misc.INT, "reuse_bin", "0",
 		"reuse existing bin artifacts and skip compiler/linker phases")
 
+	command_line_parser.AddOption(misc.INT, "test_mmu", "0",
+		"enable MMU syscall injection test mode (inject syscalls every 1000 instructions)")
+
 	command_line_parser.AddOption(misc.INT, "logic_frequency", "350", "DPU logic frequency in MHz")
 	command_line_parser.AddOption(misc.INT, "memory_frequency", "2400",
 		"DPU MRAM frequency in MHz")
