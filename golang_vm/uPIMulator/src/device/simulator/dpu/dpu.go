@@ -31,6 +31,7 @@ type Dpu struct {
 	dma               *logic.Dma
 	logic             *logic.Logic
 
+	kernel       *logic.Kernel
 	stat_factory *misc.StatFactory
 }
 
@@ -112,6 +113,10 @@ func (this *Dpu) Init(
 	name := fmt.Sprintf("DPU%d-%d-%d", channel_id, rank_id, dpu_id)
 	this.stat_factory = new(misc.StatFactory)
 	this.stat_factory.Init(name)
+
+	this.kernel = new(logic.Kernel)
+	this.kernel.Init(this.stat_factory)
+	this.logic.ConnectKernel(this.kernel)
 }
 
 func (this *Dpu) Fini() {
